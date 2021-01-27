@@ -3,12 +3,12 @@ const WebSocket = require("ws");
 
 var models = require("./server.js").models;
 
-const ws = new WebSocket.Server({ port: 8080 });
+const ws = new WebSocket.Server({ port: 8081 });
 
 ws.on("connection", (ws) => {
   function login(email, password) {
     console.log("in login ___");
-    models.User.login(email, password, (err, result) => {
+    models.User.login({ email: email, password: password }, (err, result) => {
       if (err) {
         console.log("err occured ==> ", err);
         ws.send(
@@ -77,6 +77,7 @@ ws.on("connection", (ws) => {
                   }
                 }
               );
+              login(parsed.data.email, parsed.data.password);
             }
           });
           break;
