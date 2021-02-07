@@ -7,10 +7,10 @@ const ws = new WebSocket.Server({ port: 8081 });
 
 ws.on("connection", (ws) => {
   function login(email, password) {
-    console.log("in login ___");
+    //console.log("in login ___");
     models.User.login({ email: email, password: password }, (err, result) => {
       if (err) {
-        console.log("err occured ==> ", err);
+        //console.log("err occured ==> ", err);
         ws.send(
           JSON.stringify({
             type: "ERROR",
@@ -18,12 +18,12 @@ ws.on("connection", (ws) => {
           })
         );
       } else {
-        console.log("logged in  ==> ", result);
+        //console.log("logged in  ==> ", result);
         models.User.findOne(
           { where: { id: result.userId }, include: "Profile" },
           (err2, userData) => {
             if (err2) {
-              console.log("err2 occured ==> ", err2);
+              //console.log("err2 occured ==> ", err2);
               ws.send(
                 JSON.stringify({
                   type: "ERROR",
@@ -31,7 +31,7 @@ ws.on("connection", (ws) => {
                 })
               );
             } else {
-              console.log("found user ==> ", result, userData);
+              //console.log("found user ==> ", result, userData);
               ws.send(
                 JSON.stringify({
                   type: "LOGGEDIN",
@@ -55,6 +55,7 @@ ws.on("connection", (ws) => {
         case "SIGNUP":
           models.User.create(parsed.data, (err, user) => {
             if (err) {
+              console.log(err);
               ws.send(
                 JSON.stringify({
                   type: "ERROR",
@@ -71,9 +72,9 @@ ws.on("connection", (ws) => {
                 },
                 (perr, profile) => {
                   if (perr) {
-                    console.log(perr);
+                    //console.log(perr);
                   } else {
-                    console.log(profile);
+                    //console.log(profile);
                   }
                 }
               );
@@ -82,11 +83,11 @@ ws.on("connection", (ws) => {
           });
           break;
         case "LOGIN":
-          console.log(parsed.data.email);
+          //console.log(parsed.data.email);
           login(parsed.data.email, parsed.data.password);
           break;
         default:
-          console.log("Nothing happened. In default!");
+          //console.log("Nothing happened. In default!");
           break;
       }
     }
